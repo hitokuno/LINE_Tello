@@ -1,9 +1,14 @@
 from django.http import HttpResponse
 import os
+from os.path import join, dirname
+from dotenv import load_dotenv
 from linebot import LineBotApi, WebhookHandler
 
-YOUR_CHANNEL_ACCESS_TOKEN = os.environ["YOUR_CHANNEL_ACCESS_TOKEN"]
-YOUR_CHANNEL_SECRET = os.environ["YOUR_CHANNEL_SECRET"]
+dotenv_path = join(dirname(__file__), '.env')
+load_dotenv(dotenv_path)
+
+YOUR_CHANNEL_ACCESS_TOKEN= os.environ.get("YOUR_CHANNEL_ACCESS_TOKEN")
+YOUR_CHANNEL_SECRET= os.environ.get("YOUR_CHANNEL_SECRET")
 
 line_bot_api = LineBotApi(YOUR_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(YOUR_CHANNEL_SECRET)
