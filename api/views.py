@@ -34,6 +34,15 @@ def callback(request):
         if message_type == 'text':
             text = e['message']['text']    # 受信メッセージの取得
 
+    if text == '離陸':
+        text
+    elif text == '着陸':
+        text
+    elif text == 'フリップ':
+        text
+    else:
+        text = "分かりません"
+
     payload = {
           "replyToken":reply_token,
           "messages":[
