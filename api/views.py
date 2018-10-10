@@ -1,17 +1,21 @@
-from django.shortcuts import render
 from django.http import HttpResponse
-import json
+import os
+from linebot import LineBotApi, WebhookHandler
+
+YOUR_CHANNEL_ACCESS_TOKEN = os.environ["YOUR_CHANNEL_ACCESS_TOKEN"]
+YOUR_CHANNEL_SECRET = os.environ["YOUR_CHANNEL_SECRET"]
+
+line_bot_api = LineBotApi(YOUR_CHANNEL_ACCESS_TOKEN)
+handler = WebhookHandler(YOUR_CHANNEL_SECRET)
 
 def index(request):
     return HttpResponse("This is bot api.")
 
 def callback(request):
-    reply = ""
-    request_json = json.loads(request.body.decode('utf-8')) # requestの情報をdict形式で取得
-    for e in request_json['events']:
-        reply_token = e['replyToken']  # 返信先トークンの取得
-        message_type = e['message']['type']   # typeの取得
+    signature = request.headers['X-Line-Signature']
 
-        if message_type == 'text':
-            text = e['message']['text']    # 受信メッセージの取得
-    return HttpResponse(text)  # テスト用
+    # get request body as text
+    body = request.get_data(as_text=True)
+    handler.handle(body, signature)
+
+    return 'OK'
