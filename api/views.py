@@ -3,24 +3,46 @@ import os
 from os.path import join, dirname
 from dotenv import load_dotenv
 from linebot import LineBotApi, WebhookHandler
+import json
+import requests
 
 dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
 
-YOUR_CHANNEL_ACCESS_TOKEN= os.environ.get("YOUR_CHANNEL_ACCESS_TOKEN")
-YOUR_CHANNEL_SECRET= os.environ.get("YOUR_CHANNEL_SECRET")
+YOUR_CHANNEL_ACCESS_TOKEN = os.environ.get("YOUR_CHANNEL_ACCESS_TOKEN")
+YOUR_CHANNEL_SECRET = os.environ.get("YOUR_CHANNEL_SECRET")
 
 line_bot_api = LineBotApi(YOUR_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(YOUR_CHANNEL_SECRET)
 
+REPLY_ENDPOINT = 'https://api.line.me/v2/bot/message/reply'
+HEADER = {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer " + YOUR_CHANNEL_ACCESS_TOKEN
+}
+
 def index(request):
     return HttpResponse("This is bot api.")
 
+
 def callback(request):
-    signature = request.headers['X-Line-Signature']
+    request_json = json.loads(request.body.decode('utf-8'))
+    for e in request_json['events']:
+        reply_token = e['replyToken']  # 返信先トークンの取得
+        message_type = e['message']['type']   # typeの取得
 
-    # get request body as text
-    body = request.get_data(as_text=True)
-    handler.handle(body, signature)
+        if message_type == 'text':
+            text = e['message']['text']    # 受信メッセージの取得
 
-    return 'OK'
+    payload = {
+          "replyToken":reply_token,
+          "messages":[
+                {
+                    "type":"text",
+                    "text": text
+                }
+            ]
+    }
+
+    requests.post(REPLY_ENDPOINT, headers=HEADER, data=json.dumps(payload))
+    return text
