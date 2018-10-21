@@ -26,6 +26,9 @@ command = ""
 def index(request):
     return HttpResponse("This is bot api.")
 
+def line(request):
+    return render(request, 'line.html', {})
+
 def command(request):
     json_str = json.dumps(command, ensure_ascii=False, indent=2)
     response = HttpResponse(json_str, content_type='application/json; charset=UTF-8', status=None)
