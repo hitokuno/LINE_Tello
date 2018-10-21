@@ -21,8 +21,31 @@ HEADER = {
     "Authorization": "Bearer " + YOUR_CHANNEL_ACCESS_TOKEN
 }
 
+command = ""
+
 def index(request):
     return HttpResponse("This is bot api.")
+
+def command(request):
+    json_str = json.dumps(command, ensure_ascii=False, indent=2)
+    response = HttpResponse(json_str, content_type='application/json; charset=UTF-8', status=None)
+    return response
+
+def clova(request):
+    request_json = json.loads(request.body.decode('utf-8'))
+    requestBody = request_json["request"]
+    intent = requestBody["intent"]
+    text = intent["name"]
+
+    if text == '離陸':
+        command = text
+    elif text == '着陸':
+        command = text
+    elif text == 'フリップ':
+        command = text
+    else:
+        text = "分かりません"
+    return text
 
 
 def callback(request):
