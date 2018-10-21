@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from linebot import LineBotApi, WebhookHandler
 import json
 import requests
+from django.shortcuts import render
 
 dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
