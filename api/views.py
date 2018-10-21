@@ -50,6 +50,7 @@ def clova(request):
     else:
         text = "分かりません"
     ret = {"result": text}
+    response = HttpResponse(ret, content_type='application/json; charset=UTF-8', status=None)
     return ret
 
 
