@@ -49,7 +49,8 @@ def clova(request):
         command = text
     else:
         text = "分かりません"
-    return text
+    ret = {"result": text}
+    return ret
 
 
 def callback(request):
