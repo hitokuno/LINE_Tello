@@ -36,24 +36,33 @@ def command(request):
     response = HttpResponse(json_str, content_type='application/json; charset=UTF-8', status=None)
     return response
 
+def returnResult(command):
+    ret = {'result': command}
+    response = HttpResponse(json.dumps(ret).encode("utf-8")
+, content_type='application/json; charset=UTF-8', status=None)
+    return response
+
+def status(request):
+    global command
+    return returnResult(command)
+
 def clova(request):
     request_json = json.loads(request.body.decode('utf-8'))
     requestBody = request_json["request"]
     intent = requestBody["intent"]
     text = intent["name"]
+    global command
 
-    if text == '離陸':
+    if text == 'TakeOff':
         command = text
-    elif text == '着陸':
+    elif text == 'Land':
         command = text
-    elif text == 'フリップ':
+    elif text == 'Flip':
         command = text
     else:
-        text = "分かりません"
-    ret = {"result": text}
-    response = HttpResponse(ret, content_type='application/json; charset=UTF-8', status=None)
-    return response
+        command = "Unknown"
 
+    return returnResult(command)
 
 def callback(request):
     request_json = json.loads(request.body.decode('utf-8'))

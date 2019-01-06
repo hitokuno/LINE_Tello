@@ -7,5 +7,5 @@ urlpatterns = [
     path('line', views.line, name="line"),
     path('api/callback', views.callback),
     path('api/clova', views.clova),
-    path('api/clova/command', views.command),
+    path('api/clova/status', views.status),
 ]
