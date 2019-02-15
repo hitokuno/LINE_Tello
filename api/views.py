@@ -38,21 +38,21 @@ def command(request):
 
 def returnResult(command):
     ret = {
-      "version": "1.0",
-      "sessionAttributes": {},
-      "response": {
-        "outputSpeech": {
-          "type": "SimpleSpeech",
-          "values": {
-              "type": "PlainText",
-              "lang": "ja",
-              "value": command
-          }
-        },
-        "card": {},
-        "directives": [],
-        "shouldEndSession": False
-      }
+        "version": "1.0",
+        "sessionAttributes": {},
+        "response": {
+            "outputSpeech": {
+                "type": "SimpleSpeech",
+                "values": {
+                    "type": "PlainText",
+                    "lang": "ja",
+                    "value": command
+                }
+            },
+            "card": {},
+            "directives": [],
+            "shouldEndSession": False
+        }
     }
     response = HttpResponse(json.dumps(ret).encode("utf-8")
 , content_type='application/json; charset=UTF-8', status=None)
