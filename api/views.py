@@ -37,7 +37,23 @@ def command(request):
     return response
 
 def returnResult(command):
-    ret = {'result': command}
+    ret = {
+      "version": "1.0",
+      "sessionAttributes": {},
+      "response": {
+        "outputSpeech": {
+          "type": "SimpleSpeech",
+          "values": {
+              "type": "PlainText",
+              "lang": "ja",
+              "value": command
+          }
+        },
+        "card": {},
+        "directives": [],
+        "shouldEndSession": False
+      }
+    }
     response = HttpResponse(json.dumps(ret).encode("utf-8")
 , content_type='application/json; charset=UTF-8', status=None)
     return response
@@ -49,16 +65,21 @@ def status(request):
 def clova(request):
     request_json = json.loads(request.body.decode('utf-8'))
     requestBody = request_json["request"]
+    type = requestBody["type"]
+    if type == 'LaunchRequest':
+        return returnResult('準備が出来ました。')
+    if type == 'SessionEndedRequest':
+        return returnResult('終了します')
     intent = requestBody["intent"]
     text = intent["name"]
     global command
 
     if text == 'TakeOff':
-        command = text
+        command = '離陸します'
     elif text == 'Land':
-        command = text
+        command = '着陸します'
     elif text == 'Flip':
-        command = text
+        command = 'フリップします'
     else:
         command = "Unknown"
 
