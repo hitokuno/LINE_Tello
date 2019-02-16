@@ -26,15 +26,10 @@ HEADER = {
 command = ""
 
 def index(request):
-    return HttpResponse("This is bot api.")
+    return HttpResponse("This is bot api." + str)
 
 def line(request):
     return render(request, 'line.html', {})
-
-def command(request):
-    json_str = json.dumps(command, ensure_ascii=False, indent=2)
-    response = HttpResponse(json_str, content_type='application/json; charset=UTF-8', status=None)
-    return response
 
 def returnResult(command):
     ret = {
@@ -54,13 +49,14 @@ def returnResult(command):
             "shouldEndSession": False
         }
     }
-    response = HttpResponse(json.dumps(ret).encode("utf-8")
-, content_type='application/json; charset=UTF-8', status=None)
+    response = HttpResponse(json.dumps(ret).encode("utf-8"), content_type='application/json; charset=UTF-8', status=None)
     return response
 
 def status(request):
     global command
-    return returnResult(command)
+    local_command = '' + command
+    command = ''
+    return returnResult(local_command)
 
 def clova(request):
     request_json = json.loads(request.body.decode('utf-8'))
@@ -73,45 +69,16 @@ def clova(request):
     intent = requestBody["intent"]
     text = intent["name"]
     global command
+    command = text
 
     if text == 'TakeOff':
-        command = '離陸します'
+        returnText = '離陸します'
     elif text == 'Land':
-        command = '着陸します'
+        returnText = '着陸します'
     elif text == 'Flip':
-        command = 'フリップします'
+        returnText = 'フリップします'
     else:
         command = "Unknown"
+        returnText = "分かりません。"
 
-    return returnResult(command)
-
-def callback(request):
-    request_json = json.loads(request.body.decode('utf-8'))
-    for e in request_json['events']:
-        reply_token = e['replyToken']  # 返信先トークンの取得
-        message_type = e['message']['type']   # typeの取得
-
-        if message_type == 'text':
-            text = e['message']['text']    # 受信メッセージの取得
-
-    if text == '離陸':
-        text
-    elif text == '着陸':
-        text
-    elif text == 'フリップ':
-        text
-    else:
-        text = "分かりません"
-
-    payload = {
-          "replyToken":reply_token,
-          "messages":[
-                {
-                    "type":"text",
-                    "text": text
-                }
-            ]
-    }
-
-    requests.post(REPLY_ENDPOINT, headers=HEADER, data=json.dumps(payload))
-    return text
+    return returnResult(returnText)

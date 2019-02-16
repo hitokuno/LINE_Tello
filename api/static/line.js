@@ -6,9 +6,13 @@ jQuery(document).ready(function() {
 })
 
 function readCommand () {
-  jQuery.get('clova/command',
+  jQuery.get('clova/status',
     function (data) {
-      if (data === command) {
+      try {
+        log.console(data);
+      } catch (e) {
+      }
+       if (data === '') {
          return
       }
       command = data;
