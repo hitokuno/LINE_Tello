@@ -49,6 +49,9 @@ def returnResult(command):
             "shouldEndSession": False
         }
     }
+    return returnJson(json)
+
+def returnJson(ret):
     response = HttpResponse(json.dumps(ret).encode("utf-8"), content_type='application/json; charset=UTF-8', status=None)
     return response
 
@@ -56,7 +59,7 @@ def status(request):
     global command
     local_command = '' + command
     command = ''
-    return returnResult(local_command)
+    return returnJson({ "status": local_command})
 
 def clova(request):
     request_json = json.loads(request.body.decode('utf-8'))

@@ -6,24 +6,24 @@ jQuery(document).ready(function() {
 })
 
 function readCommand () {
-  jQuery.get('clova/status',
+  jQuery.get('../api/clova/status',
     function (data) {
       try {
-        log.console(data);
+        console.log(data);
       } catch (e) {
       }
-       if (data === '') {
+       if (data.status === '') {
          return
       }
-      command = data;
+      command = data.status;
 
-      if (data === '離陸') {
+      if (command === 'TakeOff') {
         socket.send('takeOff');
       }
-      if (data === '着陸') {
+      if (command === 'Land') {
         socket.send('land');
       }
-      if (data === 'フリップ') {
+      if (command === 'Flip') {
         socket.send('flip f');
       }
   })
